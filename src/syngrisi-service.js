@@ -25,9 +25,17 @@ export default class SyngrisiCucumberService {
         // TODO: something before each Mocha/Jasmine test run
     }
 
-    beforeScenario(world) {
-        const feature = world.gherkinDocument.feature;
-        const scenario = world.pickle;
+    beforeScenario(...args) {
+        console.log({ args });
+        console.log(args.length);
+        let uri, feature, scenario, sourceLocation;
+        if (args.length > 1) { // > WDIO v7
+            [uri, feature, scenario, sourceLocation] = args;
+        } else { // WDIO v7
+            feature = args[0].gherkinDocument.feature;
+            scenario = args[0].pickle;
+        }
+
         if (this.options.tag && !scenario.tags.map((x) => x.name).includes(this.options.tag)) {
             log.debug(`beforeScenario: the option tag for visual scenario is not empty (${this.options.tag}), but scenario is not contains such tags`);
             return;
@@ -46,13 +54,19 @@ export default class SyngrisiCucumberService {
         this.vDriver.startTestSession(params, this.options.apikey);
 
         const $this = this;
-        this.browser.addCommand('syngrisiCheck', async function (checkName, imageBuffer, domDump = null) {
+        browser.addCommand('syngrisiCheck', async function (checkName, imageBuffer, domDump = null) {
             return $this.vDriver.checkSnapshoot(checkName, imageBuffer, domDump, $this.options.apikey);
         })
     }
 
-    afterScenario(world, result) {
-        const scenario = world.pickle;
+    afterScenario(...args) {
+        let uri, feature, scenario, result, sourceLocation;
+        if (args.length > 1) { // > WDIO v7
+            [uri, feature, scenario, result, sourceLocation] = args;
+        } else { // WDIO v7
+            scenario = args[0].pickle;
+        }
+
         if (this.options.tag && !scenario.tags.map((x) => x.name).includes(this.options.tag)) {
             log.debug(`afterScenario: the option tag for visual scenario is not empty (${this.options.tag}), but scenario is not contains such tags`);
             return;
