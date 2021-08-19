@@ -4,6 +4,7 @@
   "description": "WDIO Service for Syngrisi tests using Cucumber",
   "main": "build/index.js",
   "scripts": {
+    "pub": "run-s clean compile; np",
     "build": "run-s clean compile",
     "clean": "rimraf ./build",
     "compile": "babel src/ -d build/ --config-file ./babel.config.js",

@@ -8,12 +8,14 @@ export default class SyngrisiLaunchService {
     }
 
     async onPrepare(config, capabilities) {
+        log.debug('ss: onPrepare hook START');
         // use env to share variables between this "launch" service and "worker" service
         log.debug('generate run name and ident')
         process.env['SYNGRISY_RUN_NAME'] = this.generateRunName();
         process.env['SYNGRISY_RUN_INDENT'] = this.generateRunIdent();
         log.debug(`runname: '${process.env['SYNGRISY_RUN_NAME']}'`);
         log.debug(`runident: '${process.env['SYNGRISY_RUN_INDENT']}'`);
+        log.debug('ss: onPrepare hook END');
     }
 
     generateRunName(runName = faker.lorem.slug(5) + '_' + faker.datatype.uuid()) {

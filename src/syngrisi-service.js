@@ -5,10 +5,12 @@ const log = logger('wdio-syngrisi-cucumber-service');
 
 export default class SyngrisiCucumberService {
     constructor(serviceOptions, capabilities, config) {
+        log.debug('ss: constructor START');
         this.options = serviceOptions
         log.debug(`init the syngrisi driver with options: ${JSON.stringify(this.options)}`)
         const syngrisi = require('@syngrisi/syngrisi-wdio-sdk');
         this.vDriver = new syngrisi.syngrisiDriver({ url: this.options.endpoint });
+        log.debug('ss: constructor END');
     }
 
     /**
@@ -26,8 +28,9 @@ export default class SyngrisiCucumberService {
     }
 
     beforeScenario(...args) {
-        console.log({ args });
-        console.log(args.length);
+        log.debug('ss: beforeScenario hook START');
+        // console.log({ args });
+        // console.log(args.length);
         let uri, feature, scenario, sourceLocation;
         if (args.length > 1) { // > WDIO v7
             [uri, feature, scenario, sourceLocation] = args;
@@ -57,9 +60,11 @@ export default class SyngrisiCucumberService {
         browser.addCommand('syngrisiCheck', async function (checkName, imageBuffer, domDump = null) {
             return $this.vDriver.checkSnapshoot(checkName, imageBuffer, domDump, $this.options.apikey);
         })
+        log.debug('ss: beforeScenario hook END');
     }
 
     afterScenario(...args) {
+        log.debug('ss: afterScenario hook START');
         let uri, feature, scenario, result, sourceLocation;
         if (args.length > 1) { // > WDIO v7
             [uri, feature, scenario, result, sourceLocation] = args;
@@ -73,5 +78,6 @@ export default class SyngrisiCucumberService {
         }
         log.debug(`stop session with api key: '${this.options.apikey}'`);
         this.vDriver.stopTestSession(this.options.apikey);
+        log.debug('ss: afterScenario hook END');
     }
 }
