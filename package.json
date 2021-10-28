@@ -31,7 +31,7 @@
   "dependencies": {
     "faker": "^5.5.3",
     "rimraf": "^3.0.2",
-    "@syngrisi/syngrisi-wdio-sdk": "1.2.0",
+    "@syngrisi/syngrisi-wdio-sdk": "1.2.1",
     "@wdio/logger": "^7.7.0"
   },
   "publishConfig": {
