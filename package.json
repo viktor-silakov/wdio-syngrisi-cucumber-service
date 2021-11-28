@@ -3,6 +3,9 @@
   "version": "1.0.7",
   "description": "WDIO Service for Syngrisi tests using Cucumber",
   "main": "dist/index.js",
+  "np": {
+    "releaseDraft": true
+  },
   "scripts": {
     "pub": "run-s install:global clean compile; np",
     "build": "run-s clean compile",
