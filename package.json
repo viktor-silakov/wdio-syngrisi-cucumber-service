@@ -1,10 +1,17 @@
 {
   "name": "wdio-syngrisi-cucumber-service",
   "version": "1.0.8",
-  "description": "WDIO Service for Syngrisi tests using Cucumber",
+  "description": "WDIO Service for Syngrisi visual tests using Cucumber",
   "main": "dist/index.js",
   "np": {
     "releaseDraft": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:viktor-silakov/wdio-syngrisi-cucumber-service.git"
+  },
+  "bugs": {
+    "url": "https://github.com/viktor-silakov/wdio-syngrisi-cucumber-service/issues"
   },
   "scripts": {
     "pub": "run-s install:global clean compile; np",
