@@ -1,29 +1,24 @@
+/* eslint-disable require-jsdoc */
 import logger from '@wdio/logger';
-import faker from 'faker';
+import utils from './utils';
 
-const log = logger('wdio-syngrisi-cucumber-service')
+const log = logger('wdio-syngrisi-cucumber-service');
 
 export default class SyngrisiLaunchService {
+    // eslint-disable-next-line no-unused-vars,no-useless-constructor,no-empty-function
     constructor(serviceOptions, capabilities, config) {
     }
 
+    // eslint-disable-next-line no-unused-vars,class-methods-use-this
     async onPrepare(config, capabilities) {
         log.debug('ss: onPrepare hook START');
         // use env to share variables between this "launch" service and "worker" service
-        log.debug('generate run name and ident')
-        process.env['SYNGRISY_RUN_NAME'] = this.generateRunName();
-        process.env['SYNGRISY_RUN_INDENT'] = this.generateRunIdent();
-        log.debug(`runname: '${process.env['SYNGRISY_RUN_NAME']}'`);
-        log.debug(`runident: '${process.env['SYNGRISY_RUN_INDENT']}'`);
+        log.debug('generate run name and ident');
+        process.env.SYNGRISY_RUN_NAME = utils.generateRunName();
+        process.env.SYNGRISY_RUN_INDENT = utils.generateRunIdent();
+        log.debug(`runname: '${process.env.SYNGRISY_RUN_NAME}'`);
+        log.debug(`runident: '${process.env.SYNGRISY_RUN_INDENT}'`);
+
         log.debug('ss: onPrepare hook END');
-    }
-
-    generateRunName(runName = faker.lorem.slug(5) + '_' + faker.datatype.uuid()) {
-        return faker.lorem.sentence(4)
-            .replace('.', '');
-    }
-
-    generateRunIdent() {
-        return faker.datatype.uuid();
     }
 }
