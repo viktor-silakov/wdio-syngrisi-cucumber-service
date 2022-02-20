@@ -23,8 +23,8 @@ export.config = {
                     endpoint: `http://localhost:3000/`,
                     // syngrisi API key
                     apikey: process.env['SYNGRISI_API_KEY'] || '',
-                    // SUT application name
-                    app: 'My App',
+                    // project name
+                    project: 'My Project',
                     // the tested branch
                     branch: 'master',
                     // run name (will be auto generated if not present)
