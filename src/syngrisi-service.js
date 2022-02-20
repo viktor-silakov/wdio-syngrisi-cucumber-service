@@ -55,7 +55,7 @@ export default class SyngrisiCucumberService {
                 return;
             }
             const params = {
-                app: this.options.app,
+                app: this.options.app || this.options.project,
                 branch: this.options.branch,
                 tags: scenario.tags ? scenario.tags.map((x) => x.name) : [],
                 test: scenario.name,
