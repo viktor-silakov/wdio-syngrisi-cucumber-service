@@ -11,7 +11,7 @@ export default class SyngrisiLaunchService {
 
     // eslint-disable-next-line no-unused-vars,class-methods-use-this
     async onPrepare(config, capabilities) {
-        log.debug('ss: onPrepare hook START');
+        log.trace('onPrepare hook START');
         // use env to share variables between this "launch" service and "worker" service
         log.debug('generate run name and ident');
         process.env.SYNGRISY_RUN_NAME = utils.generateRunName();
@@ -19,6 +19,6 @@ export default class SyngrisiLaunchService {
         log.debug(`runname: '${process.env.SYNGRISY_RUN_NAME}'`);
         log.debug(`runident: '${process.env.SYNGRISY_RUN_INDENT}'`);
 
-        log.debug('ss: onPrepare hook END');
+        log.trace('onPrepare hook END');
     }
 }

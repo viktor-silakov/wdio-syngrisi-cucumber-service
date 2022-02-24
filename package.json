@@ -46,7 +46,7 @@
     "npm-run-all": "^4.1.5"
   },
   "dependencies": {
-    "@syngrisi/syngrisi-wdio-sdk": "^1.2.8",
+    "@syngrisi/syngrisi-wdio-sdk": "^1.2.10",
     "@wdio/logger": "^7.7.0",
     "faker": "^5.5.3",
     "import-cwd": "^3.0.0",
