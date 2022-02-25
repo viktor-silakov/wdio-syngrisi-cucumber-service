@@ -72,15 +72,15 @@ export default class SyngrisiCucumberService {
             browser.addCommand(
                 'syngrisiCheck',
                 // eslint-disable-next-line arrow-body-style
-                async (checkName, imageBuffer, domDump = null) => {
-                    return $this.vDriver.check(checkName, imageBuffer, $this.options.apikey, params, domDump);
+                async (checkName, imageBuffer, opts, domDump = null) => {
+                    return $this.vDriver.check(checkName, imageBuffer, $this.options.apikey, opts, domDump);
                 }
             );
             browser.addCommand(
                 'syngrisiIsBaselineExist',
                 // eslint-disable-next-line arrow-body-style
-                async (imageBuffer, name) => {
-                    return $this.vDriver.checkIfBaselineExist(imageBuffer, name, $this.options.apikey, params);
+                async (name, imageBuffer) => {
+                    return $this.vDriver.checkIfBaselineExist(name, imageBuffer, $this.options.apikey, params);
                 }
             );
             log.trace('beforeScenario hook END');
