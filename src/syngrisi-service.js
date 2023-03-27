@@ -50,6 +50,12 @@ export default class SyngrisiCucumberService {
                 scenario = args[0]?.pickle;
             }
 
+            if (this.options.excludeTag && scenario.tags.map((x) => x.name)
+                .includes(this.options.excludeTag)) {
+                log.debug(`beforeScenario: the option excludeTag for visual scenario is not empty (${this.options.excludeTag}), scenario will be excluded`);
+                return;
+            }
+
             if (this.options.tag && !scenario.tags.map((x) => x.name)
                 .includes(this.options.tag)) {
                 log.debug(`beforeScenario: the option tag for visual scenario is not empty (${this.options.tag}), but scenario is not contains such tags`);
@@ -121,6 +127,11 @@ export default class SyngrisiCucumberService {
                 [uri, feature, scenario, result, sourceLocation] = args;
             } else { // WDIO v7
                 scenario = args[0].pickle;
+            }
+            if (this.options.excludeTag && scenario.tags.map((x) => x.name)
+                .includes(this.options.excludeTag)) {
+                log.debug(`beforeScenario: the option excludeTag for visual scenario is not empty (${this.options.excludeTag}), scenario will be excluded`);
+                return;
             }
 
             if (this.options.tag && !scenario.tags.map((x) => x.name)

@@ -36,6 +36,8 @@ export.config = {
                 // for all scenarios with this tag the service will create session on syngrisi
                 // if tag is empty the visual session will be created for all scenarios
                 // tag: '@visual',
+                // the scenarios with `excludeTag` tag will be skipped 
+                // excludeTag: '@novisual'
             }
         ],
     ],
