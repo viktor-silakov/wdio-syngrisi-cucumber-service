@@ -3,4 +3,6 @@ node_modules/
 .idea/
 /--spec/
 dist/
+logs/
+.snapshots-images/
 *.tmp

@@ -1,8 +1,11 @@
 /* eslint-disable require-jsdoc */
-import logger from '@wdio/logger';
+import pino from 'pino';
 import utils from './utils';
 
-const log = logger('wdio-syngrisi-cucumber-service');
+const log = pino({
+    name: 'wdio-syngrisi-cucumber-service',
+    level: process.env.WDIO_LOG_LEVEL || process.env.LOG_LEVEL || 'info',
+});
 
 export default class SyngrisiLaunchService {
     // eslint-disable-next-line no-unused-vars,no-useless-constructor,no-empty-function

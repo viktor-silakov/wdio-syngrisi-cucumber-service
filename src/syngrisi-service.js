@@ -1,7 +1,12 @@
 /* eslint-disable require-jsdoc */
-import logger from '@wdio/logger';
+import { createHash } from 'node:crypto';
+import pino from 'pino';
+import createSyngrisiDriver from './syngrisi-driver-factory.js';
 
-const log = logger('wdio-syngrisi-cucumber-service');
+const log = pino({
+    name: 'wdio-syngrisi-cucumber-service',
+    level: process.env.WDIO_LOG_LEVEL || process.env.LOG_LEVEL || 'info',
+});
 
 // eslint-disable-next-line require-jsdoc
 // noinspection JSUnusedLocalSymbols
@@ -13,8 +18,10 @@ export default class SyngrisiCucumberService {
         log.trace('constructor START');
         this.options = serviceOptions;
         log.debug(`init the syngrisi driver with options: ${JSON.stringify(this.options)}`);
-        const syngrisi = require('@syngrisi/syngrisi-wdio-sdk');
-        this.vDriver = new syngrisi.SyngrisiDriver({ url: this.options.endpoint });
+        this.vDriver = createSyngrisiDriver({
+            url: this.options.endpoint,
+            apiKey: this.options.apikey,
+        });
         log.trace('constructor END');
     }
 
@@ -72,21 +79,44 @@ export default class SyngrisiCucumberService {
             };
             log.debug(`start syngrisi session with params: '${JSON.stringify(params)}', apikey: ${this.options.apikey}`);
 
-            await this.vDriver.startTestSession(params, this.options.apikey);
+            await this.vDriver.startTestSession({ params });
 
             const $this = this;
             browser.addCommand(
                 'syngrisiCheck',
                 // eslint-disable-next-line arrow-body-style
                 async (checkName, imageBuffer, opts, domDump = null) => {
-                    return $this.vDriver.check(checkName, imageBuffer, $this.options.apikey, opts, domDump);
+                    return $this.vDriver.check({
+                        checkName,
+                        imageBuffer,
+                        params: opts,
+                        domDump,
+                    });
                 }
             );
             browser.addCommand(
                 'syngrisiIsBaselineExist',
                 // eslint-disable-next-line arrow-body-style
-                async (name, imageBuffer) => {
-                    return $this.vDriver.checkIfBaselineExist(name, imageBuffer, $this.options.apikey, params);
+                async (name, imageBuffer, opts = {}) => {
+                    const baselineResult = await $this.vDriver.getBaselines({
+                        params: {
+                            name,
+                            ...opts,
+                        },
+                    });
+                    let exists = Array.isArray(baselineResult?.results) && baselineResult.results.length > 0;
+                    if (exists && Buffer.isBuffer(imageBuffer)) {
+                        const imgHash = createHash('sha512').update(imageBuffer).digest('hex');
+                        exists = baselineResult.results.some((baseline) => (
+                            baseline?.imghash === imgHash
+                            || baseline?.hashCode === imgHash
+                            || baseline?.hash === imgHash
+                        ));
+                    }
+                    return {
+                        ...baselineResult,
+                        exists,
+                    };
                 }
             );
             log.trace('beforeScenario hook END');
@@ -140,7 +170,7 @@ export default class SyngrisiCucumberService {
                 return;
             }
             log.debug(`stop session with api key: '${this.options.apikey}'`);
-            await this.vDriver.stopTestSession(this.options.apikey);
+            await this.vDriver.stopTestSession();
             log.trace('afterScenario hook END');
         } catch (e) {
             throw new Error(`error in Syngrisi Cucumber service afterScenario hook: '${e + (e.trace || '')}'`);
