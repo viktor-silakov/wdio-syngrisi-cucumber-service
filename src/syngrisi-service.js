@@ -119,6 +119,55 @@ export default class SyngrisiCucumberService {
                     };
                 }
             );
+
+            // Backward compatibility: getLastBaseline command
+            browser.addCommand(
+                'getLastBaseline',
+                // eslint-disable-next-line arrow-body-style
+                async (params = {}) => {
+                    try {
+                        const baselineResult = await $this.vDriver.getBaselines({ params });
+                        if (Array.isArray(baselineResult?.results) && baselineResult.results.length > 0) {
+                            // Return the first baseline (most recent)
+                            const baseline = baselineResult.results[0];
+                            // Map to expected format with snapshootId (note the typo is intentional for compatibility)
+                            return {
+                                ...baseline,
+                                snapshootId: baseline.actualSnapshotId || baseline._id,
+                            };
+                        }
+                        return null;
+                    } catch (e) {
+                        log.warn(`getLastBaseline error: ${e.message || e}`);
+                        return null;
+                    }
+                }
+            );
+
+            // Backward compatibility: getSnapshot command
+            browser.addCommand(
+                'getSnapshot',
+                // eslint-disable-next-line arrow-body-style
+                async (params = {}) => {
+                    try {
+                        const snapshotResult = await $this.vDriver.getSnapshots({ params });
+                        if (Array.isArray(snapshotResult?.results) && snapshotResult.results.length > 0) {
+                            // If _id is provided, find specific snapshot
+                            if (params._id) {
+                                const snapshot = snapshotResult.results.find(s => s._id === params._id);
+                                return snapshot || null;
+                            }
+                            // Otherwise return first snapshot
+                            return snapshotResult.results[0];
+                        }
+                        return null;
+                    } catch (e) {
+                        log.warn(`getSnapshot error: ${e.message || e}`);
+                        return null;
+                    }
+                }
+            );
+
             log.trace('beforeScenario hook END');
         } catch (e) {
             const errMsg = 'error in Syngrisi Cucumber service, maybe Syngrisi is not started,\n'
